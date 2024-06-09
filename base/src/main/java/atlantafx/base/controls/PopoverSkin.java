@@ -212,6 +212,10 @@ public class PopoverSkin implements Skin<Popover> {
         };
 
         final EventHandler<MouseEvent> mouseDragHandler = evt -> {
+            if (dragStartLocation == null) {
+                return;
+            }
+
             if (popover.isDetachable() || popover.isDetached()) {
                 double deltaX = evt.getScreenX() - xOffset;
                 double deltaY = evt.getScreenY() - yOffset;
