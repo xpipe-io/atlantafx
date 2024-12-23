@@ -80,11 +80,13 @@ public class ToggleSwitchSkin extends SkinBase<ToggleSwitch> {
 
         label.textProperty().bind(control.textProperty());
         label.graphicProperty().bind(control.graphicProperty());
+        label.alignmentProperty().bind(control.alignmentProperty());
         StackPane.setAlignment(label, Pos.CENTER_LEFT);
 
         labelContainer.getChildren().addAll(label);
         getChildren().addAll(labelContainer, thumbArea, thumb);
 
+        label.setOnMouseReleased(event -> mousePressedOnToggleSwitch(control));
         thumbArea.setOnMouseReleased(event -> mousePressedOnToggleSwitch(control));
         thumb.setOnMouseReleased(event -> mousePressedOnToggleSwitch(control));
         control.selectedProperty().addListener((observable, oldValue, newValue) -> {

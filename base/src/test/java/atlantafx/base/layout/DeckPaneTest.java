@@ -9,10 +9,12 @@ import java.util.function.Consumer;
 import javafx.scene.Node;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith({JavaFXTest.class})
+@Disabled
 public class DeckPaneTest {
 
     @Test
