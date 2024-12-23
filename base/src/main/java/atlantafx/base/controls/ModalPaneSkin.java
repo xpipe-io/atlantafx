@@ -69,6 +69,11 @@ public class ModalPaneSkin extends SkinBase<ModalPane> {
     protected void registerListeners() {
         registerChangeListener(getSkinnable().contentProperty(), obs -> {
             @Nullable Node content = getSkinnable().getContent();
+
+            // The transition is node-based
+            inTransition = null;
+            outTransition = null;
+
             if (content != null) {
                 contentWrapper.getChildren().setAll(content);
             } else {
