@@ -71,7 +71,13 @@ public class ModalPaneSkin extends SkinBase<ModalPane> {
             @Nullable Node content = getSkinnable().getContent();
 
             // The transition is node-based
+            if (inTransition != null) {
+                inTransition.statusProperty().removeListener(animationInListener);
+            }
             inTransition = null;
+            if (outTransition != null) {
+                outTransition.statusProperty().removeListener(animationOutListener);
+            }
             outTransition = null;
 
             if (content != null) {
