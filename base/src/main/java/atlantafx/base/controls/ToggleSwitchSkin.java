@@ -81,7 +81,6 @@ public class ToggleSwitchSkin extends SkinBase<ToggleSwitch> {
         label.textProperty().bind(control.textProperty());
         label.graphicProperty().bind(control.graphicProperty());
         label.alignmentProperty().bind(control.alignmentProperty());
-        label.graphicTextGapProperty().bind(control.graphicTextGapProperty());
         StackPane.setAlignment(label, Pos.CENTER_LEFT);
 
         labelContainer.getChildren().addAll(label);
