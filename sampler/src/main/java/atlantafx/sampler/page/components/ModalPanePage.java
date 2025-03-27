@@ -334,6 +334,10 @@ public final class ModalPanePage extends OutlinePage {
         // you can use a selector
         var dialog = new ModalBox("#modalPane");
 
+        dialog.setOnMinimize(event -> {
+            System.out.println("onMinimize");
+        });
+
         // ... or your pass a ModalPane instance directly
         //var dialog = new ModalBox(modalPane);
 

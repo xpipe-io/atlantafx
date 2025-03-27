@@ -62,6 +62,7 @@ public final class PopoverPage extends OutlinePage {
         pop1.setTitle("Lorem Ipsum");
         pop1.setHeaderAlwaysVisible(true);
         pop1.setDetachable(true);
+        pop1.setMinimizeAction(() -> {});
 
         var link1 = new Hyperlink("Text");
         link1.setOnAction(e -> pop1.show(link1));

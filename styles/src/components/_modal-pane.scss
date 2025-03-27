@@ -11,6 +11,8 @@ $color-dialog-close-bg-hover: -color-bg-subtle  !default;
 $close-button-radius:    100px  !default;
 $close-button-padding:   0.6em  !default;
 $close-button-icon-size: 0.3em !default;
+$minimize-button-padding:   0.84em 0.5em !default;
+$minimize-button-icon-size: 0.03em 0.35em !default;
 
 .modal-pane {
   -color-modal-pane-overlay: $color-modal-bg;
@@ -36,6 +38,22 @@ $close-button-icon-size: 0.3em !default;
       @include icons.get("close", true);
       -fx-background-color: -color-modal-box-close-fg;
       -fx-padding: $close-button-icon-size;
+    }
+
+    &:hover {
+      -fx-background-color: -color-border-muted, -color-modal-box-close-bg-hover;
+      -fx-background-insets: 0, 1;
+    }
+  }
+
+  >.minimize-button {
+    -fx-background-radius: $close-button-radius;
+    -fx-padding: $minimize-button-padding;
+
+    >.icon {
+      @include icons.get("minimize", true);
+      -fx-background-color: -color-modal-box-close-fg;
+      -fx-padding: $minimize-button-icon-size;
     }
 
     &:hover {

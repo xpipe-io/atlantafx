@@ -26,6 +26,8 @@ import org.jetbrains.annotations.Nullable;
  */
 public class ModalBox extends AnchorPane {
 
+    protected final StackPane minimizeButton = new StackPane();
+    protected final StackPane minimizeButtonIcon = new StackPane();
     protected final StackPane closeButton = new StackPane();
     protected final StackPane closeButtonIcon = new StackPane();
     protected final @Nullable String selector;
@@ -111,14 +113,28 @@ public class ModalBox extends AnchorPane {
 
         closeButtonIcon.getStyleClass().add("icon");
 
+        minimizeButton.getStyleClass().add("minimize-button");
+        minimizeButton.getChildren().setAll(minimizeButtonIcon);
+        minimizeButton.setOnMouseClicked(this::handleMinimize);
+        minimizeButton.visibleProperty().bind(onMinimize.isNotNull());
+
+        minimizeButtonIcon.getStyleClass().add("icon");
+
         getStyleClass().add("modal-box");
+        getChildren().add(minimizeButton);
         getChildren().add(closeButton);
         setCloseButtonPosition();
+        setMinimizeButtonPosition();
     }
 
     protected void setCloseButtonPosition() {
         setTopAnchor(closeButton, 10d);
         setRightAnchor(closeButton, 10d);
+    }
+
+    protected void setMinimizeButtonPosition() {
+        setTopAnchor(minimizeButton, 10d);
+        setRightAnchor(minimizeButton, 23d);
     }
 
     protected void handleClose() {
@@ -135,6 +151,23 @@ public class ModalBox extends AnchorPane {
         // call user specified close handler
         if (onClose.get() != null) {
             onClose.get().handle(new Event(Event.ANY));
+        }
+    }
+
+    protected void handleMinimize(Event e) {
+        if (modalPane != null) {
+            modalPane.hide(clearOnClose.get());
+        } else if (selector != null && getScene() != null) {
+            if (getScene().lookup(selector) instanceof ModalPane mp) {
+                // cache modal pane so that the lookup is executed only once
+                modalPane = mp;
+                modalPane.hide(clearOnClose.get());
+            }
+        }
+
+        // call user specified minimize handler
+        if (onMinimize.get() != null) {
+            onMinimize.get().handle(e);
         }
     }
 
@@ -164,6 +197,22 @@ public class ModalBox extends AnchorPane {
         this.onClose.set(onClose);
     }
 
+
+
+    public ObjectProperty<EventHandler<? super Event>> onMinimizeProperty() {
+        return onMinimize;
+    }
+
+    protected final ObjectProperty<EventHandler<? super Event>> onMinimize =
+            new SimpleObjectProperty<>(this, "onMinimize");
+
+    public EventHandler<? super Event> getOnMinimize() {
+        return onMinimize.get();
+    }
+
+    public void setOnMinimize(EventHandler<? super Event> onMinimize) {
+        this.onMinimize.set(onMinimize);
+    }
     /**
      * Specifies whether to remove (clear) the ModalPane content after it's closed.
      *
