@@ -134,7 +134,7 @@ public class ModalBox extends AnchorPane {
 
     protected void setMinimizeButtonPosition() {
         setTopAnchor(minimizeButton, 10d);
-        setRightAnchor(minimizeButton, 23d);
+        setRightAnchor(minimizeButton, 45d);
     }
 
     protected void handleClose() {
