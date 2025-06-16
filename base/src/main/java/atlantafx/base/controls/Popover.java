@@ -601,20 +601,6 @@ public class Popover extends PopupControl {
         return closeButtonEnabled.getValue();
     }
 
-    private final ObjectProperty<Runnable> minimizeAction = new SimpleObjectProperty<>(this, "minimizeAction");
-
-    public final ObjectProperty<Runnable> minimizeActionProperty() {
-        return minimizeAction;
-    }
-
-    public final void setMinimizeAction(Runnable action) {
-        minimizeAction.setValue(action);
-    }
-
-    public final Runnable getMinimizeAction() {
-        return minimizeAction.get();
-    }
-
     /**
      * Determines if the popover is detachable at all.
      */

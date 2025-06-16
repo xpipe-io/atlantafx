@@ -128,32 +128,9 @@ public class PopoverSkin implements Skin<Popover> {
         });
         closeIcon.setPickOnBounds(false);
 
-        Label minimizeIcon = new Label();
-        minimizeIcon.setGraphic(createMinimizeIcon());
-        minimizeIcon.setMaxSize(MAX_VALUE, MAX_VALUE);
-        minimizeIcon.setContentDisplay(GRAPHIC_ONLY);
-        minimizeIcon.visibleProperty().bind(
-                popover.minimizeActionProperty().isNotNull().and(
-                        popover.detachedProperty().or(popover.headerAlwaysVisibleProperty())));
-        minimizeIcon.getStyleClass().add("icon");
-        minimizeIcon.setAlignment(TOP_RIGHT);
-        minimizeIcon.paddingProperty().bind(Bindings.createObjectBinding(() -> {
-            return closeIcon.isVisible() ? new Insets(0, 22, 0, 0) : Insets.EMPTY;
-        }, closeIcon.visibleProperty()));
-        minimizeIcon.setPickOnBounds(false);
-        minimizeIcon.getGraphic().setOnMouseClicked(evt -> {
-            var a = popover.getMinimizeAction();
-            if (a != null) {
-                popover.hide();
-                a.run();
-                evt.consume();
-            }
-        });
-
         titlePane = new StackPane();
         titlePane.getChildren().add(title);
         titlePane.getChildren().add(closeIcon);
-        titlePane.getChildren().add(minimizeIcon);
         titlePane.getStyleClass().add("title");
 
         content = new BorderPane();
@@ -319,28 +296,6 @@ public class PopoverSkin implements Skin<Popover> {
         line2.setEndX(8);
         line2.setEndY(16);
         group.getChildren().add(line2);
-
-        return group;
-    }
-
-    private Node createMinimizeIcon() {
-        Group group = new Group();
-        group.getStyleClass().add("graphics");
-
-        Circle circle = new Circle();
-        circle.getStyleClass().add("circle");
-        circle.setRadius(12);
-        circle.setCenterX(12);
-        circle.setCenterY(12);
-        group.getChildren().add(circle);
-
-        Line line1 = new Line();
-        line1.getStyleClass().add("line");
-        line1.setStartX(8);
-        line1.setStartY(12);
-        line1.setEndX(16);
-        line1.setEndY(12);
-        group.getChildren().add(line1);
 
         return group;
     }
