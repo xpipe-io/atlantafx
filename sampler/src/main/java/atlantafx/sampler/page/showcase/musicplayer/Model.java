@@ -36,8 +36,8 @@ final class Model {
                     Map.of("create", "true")
                 )) {
                     return List.of(
-                        fs.getPath(Resources.MODULE_DIR + "media/Beat Thee.mp3"),
-                        fs.getPath(Resources.MODULE_DIR + "media/Study and Relax.mp3")
+                        fs.getPath(Resources.MODULE_DIR + "media/BeatThee.mp3"),
+                        fs.getPath(Resources.MODULE_DIR + "media/StudyandRelax.mp3")
                     );
                 }
             } catch (URISyntaxException | IOException e) {
@@ -46,8 +46,8 @@ final class Model {
         }
 
         return List.of(
-            Paths.get(Resources.getResource("media/Beat Thee.mp3")),
-            Paths.get(Resources.getResource("media/Study and Relax.mp3"))
+            Paths.get(Resources.getResource("media/BeatThee.mp3")),
+            Paths.get(Resources.getResource("media/StudyandRelax.mp3"))
         );
     }
 
