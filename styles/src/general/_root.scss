@@ -150,13 +150,6 @@
   }
 }
 
-// font icons
-.ikonli-font-icon {
-  -fx-icon-color: -color-fg-default;
-  -fx-fill: -color-fg-default;
-  -fx-icon-size: cfg.$icon-size;
-}
-
 // Hide mnemonic stroke by default. It can only appear when user holds
 // Meta button, which adds ":show-mnemonics" pseudo-class to each control
 // that set mnemonicParsing = true.
