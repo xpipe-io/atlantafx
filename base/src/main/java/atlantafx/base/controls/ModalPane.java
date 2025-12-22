@@ -245,10 +245,10 @@ public class ModalPane extends Control {
      * and triggering its display state at the same time.
      */
     public void hide(boolean clear) {
-        setDisplay(false);
         if (clear) {
             setContent(null);
         }
+        setDisplay(false);
     }
 
     /**
