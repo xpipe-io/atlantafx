@@ -45,6 +45,7 @@ import javafx.css.StyleableProperty;
 import javafx.css.converter.EnumConverter;
 import javafx.event.ActionEvent;
 import javafx.geometry.HorizontalDirection;
+import javafx.scene.AccessibleAction;
 import javafx.scene.AccessibleAttribute;
 import javafx.scene.AccessibleRole;
 import javafx.scene.control.Labeled;
@@ -98,7 +99,19 @@ public class ToggleSwitch extends Labeled implements Toggle {
         switch (attribute) {
             case SELECTED:
                 return isSelected();
+            case TEXT:
+                return getText();
             default: return super.queryAccessibleAttribute(attribute, parameters);
+        }
+    }
+
+    @Override
+    public void executeAccessibleAction(AccessibleAction action, Object... parameters) {
+        switch (action) {
+            case FIRE:
+                fire();
+                break;
+            default: super.executeAccessibleAction(action);
         }
     }
 
