@@ -63,7 +63,7 @@ public class CustomTextField extends TextField {
      * {@inheritDoc}
      */
     @Override
-    protected Skin<?> createDefaultSkin() {
+    public Skin<?> createDefaultSkin() {
         return new CustomTextFieldSkin(this) {
             @Override
             public ObjectProperty<Node> leftProperty() {

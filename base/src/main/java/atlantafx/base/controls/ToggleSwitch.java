@@ -100,7 +100,9 @@ public class ToggleSwitch extends Labeled implements Toggle {
             case SELECTED:
                 return isSelected();
             case TEXT:
-                return getText();
+                String accText = getAccessibleText();
+                if (accText != null && !accText.isEmpty()) return accText;
+                return getText() != null ? getText() : "";
             default: return super.queryAccessibleAttribute(attribute, parameters);
         }
     }
