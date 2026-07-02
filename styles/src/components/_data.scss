@@ -440,13 +440,6 @@ $tree-cell-indent: 1.2em !default; // default JavaFX values is 18px
   }
 }
 
-// when in constrained resize mode, the right-most visible cell should not have a right-border,
-// as it is not possible to get this cleanly out of view without introducing horizontal scrollbars
-.table-view:constrained-resize>.virtual-flow>.clipped-container>.sheet>.table-row-cell>.table-cell:last-visible,
-.tree-table-view:constrained-resize>.virtual-flow>.clipped-container>.sheet>.tree-table-row-cell>.tree-table-cell:last-visible {
-  -fx-border-color: transparent;
-}
-
 // reset inherited font weight for context menu
 .table-view .column-header .context-menu,
 .tree-table-view .column-header .context-menu,
