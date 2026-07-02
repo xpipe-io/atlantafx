@@ -29,8 +29,6 @@ public class ModalPaneSkin extends SkinBase<ModalPane> {
 
     protected ModalPane control;
 
-    protected final StackPane root;
-    protected final ScrollPane scrollPane;
     protected final StackPane contentWrapper;
 
     protected final EventHandler<KeyEvent> keyHandler = createKeyHandler();
@@ -38,28 +36,17 @@ public class ModalPaneSkin extends SkinBase<ModalPane> {
     protected final ChangeListener<Animation.Status> animationInListener = createAnimationInListener();
     protected final ChangeListener<Animation.Status> animationOutListener = createAnimationOutListener();
 
-    protected @Nullable List<ScrollBar> scrollbars;
     protected @Nullable Animation inTransition;
     protected @Nullable Animation outTransition;
 
     protected ModalPaneSkin(ModalPane control) {
         super(control);
 
-        root = new StackPane();
-
         contentWrapper = new StackPane();
         contentWrapper.getStyleClass().add("scrollable-content");
         contentWrapper.setAlignment(Pos.CENTER);
 
-        scrollPane = new ScrollPane();
-        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        scrollPane.setFitToHeight(true);
-        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        scrollPane.setFitToWidth(true);
-        scrollPane.setMaxHeight(20_000); // scroll pane won't work without height specified
-        scrollPane.setContent(contentWrapper);
-
-        getChildren().add(scrollPane);
+        getChildren().add(contentWrapper);
         control.getStyleClass().add("modal-pane");
         doHide();
 
@@ -122,12 +109,12 @@ public class ModalPaneSkin extends SkinBase<ModalPane> {
 
         // Hide overlay by pressing ESC.
         // It only works when modal pane or one of its children has focus.
-        scrollPane.addEventHandler(KeyEvent.KEY_PRESSED, keyHandler);
+        contentWrapper.addEventHandler(KeyEvent.KEY_PRESSED, keyHandler);
 
         // Hide overlay by clicking outside the content area. Don't use MOUSE_CLICKED,
         // because it's the same as MOUSE_RELEASED event, thus it doesn't prevent case
         // when user pressed mouse button inside the content and released outside of it.
-        scrollPane.addEventFilter(MouseEvent.MOUSE_PRESSED, mouseHandler);
+        contentWrapper.addEventFilter(MouseEvent.MOUSE_PRESSED, mouseHandler);
     }
 
     @Override
@@ -142,8 +129,8 @@ public class ModalPaneSkin extends SkinBase<ModalPane> {
         contentWrapper.paddingProperty().unbind();
         contentWrapper.alignmentProperty().unbind();
 
-        scrollPane.removeEventFilter(KeyEvent.KEY_PRESSED, keyHandler);
-        scrollPane.removeEventFilter(MouseEvent.MOUSE_PRESSED, mouseHandler);
+        contentWrapper.removeEventFilter(KeyEvent.KEY_PRESSED, keyHandler);
+        contentWrapper.removeEventFilter(MouseEvent.MOUSE_PRESSED, mouseHandler);
     }
 
     @SuppressWarnings("ShortCircuitBoolean")
@@ -180,20 +167,10 @@ public class ModalPaneSkin extends SkinBase<ModalPane> {
                 return;
             }
 
-            if (scrollbars == null || scrollbars.isEmpty()) {
-                scrollbars = scrollPane.lookupAll(".scroll-bar").stream()
-                    .filter(node -> node instanceof ScrollBar)
-                    .map(node -> (ScrollBar) node)
-                    .toList();
-            }
-
-            var scrollBarClick = scrollbars.stream().anyMatch(scrollBar -> isClickInArea(event, scrollBar));
-            if (!scrollBarClick) {
-                if (getSkinnable().getPersistent()) {
-                    createCloseBlockedAnimation().playFromStart();
-                } else {
-                    hideAndConsume(event);
-                }
+            if (getSkinnable().getPersistent()) {
+                createCloseBlockedAnimation().playFromStart();
+            } else {
+                hideAndConsume(event);
             }
         };
     }
