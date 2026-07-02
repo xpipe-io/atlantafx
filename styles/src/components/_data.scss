@@ -85,17 +85,17 @@ $tree-cell-indent: 1.2em !default; // default JavaFX values is 18px
 }
 
 // row selection (cellSelectionEnabled = false)
-.list-view>.virtual-flow>.clipped-container>.sheet>.list-cell:filled:selected,
-.tree-view>.virtual-flow>.clipped-container>.sheet>.tree-cell:filled:selected,
-.table-view>.virtual-flow>.clipped-container>.sheet>.table-row-cell:filled:selected,
-.tree-table-view>.virtual-flow>.clipped-container>.sheet>.tree-table-row-cell:filled:selected {
+.list-view>.virtual-flow>.clipped-container>.sheet>.list-cell:selected,
+.tree-view>.virtual-flow>.clipped-container>.sheet>.tree-cell:selected,
+.table-view>.virtual-flow>.clipped-container>.sheet>.table-row-cell:selected,
+.tree-table-view>.virtual-flow>.clipped-container>.sheet>.tree-table-row-cell:selected {
   -color-cell-fg: -color-cell-fg-selected;
   -fx-background-color: -color-cell-border, -color-cell-bg-selected;
 }
-.list-view:focused>.virtual-flow>.clipped-container>.sheet>.list-cell:filled:selected,
-.tree-view:focused>.virtual-flow>.clipped-container>.sheet>.tree-cell:filled:selected,
-.table-view:focused>.virtual-flow>.clipped-container>.sheet>.table-row-cell:filled:selected,
-.tree-table-view:focused>.virtual-flow>.clipped-container>.sheet>.tree-table-row-cell:filled:selected {
+.list-view:focused>.virtual-flow>.clipped-container>.sheet>.list-cell:selected,
+.tree-view:focused>.virtual-flow>.clipped-container>.sheet>.tree-cell:selected,
+.table-view:focused>.virtual-flow>.clipped-container>.sheet>.table-row-cell:selected,
+.tree-table-view:focused>.virtual-flow>.clipped-container>.sheet>.tree-table-row-cell:selected {
   -color-cell-fg: -color-cell-fg-selected-focused;
   -fx-background-color: -color-cell-border, -color-cell-bg-selected-focused;
 }
