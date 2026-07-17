@@ -13,9 +13,9 @@ Maven:
 
 ```xml
 <dependency>
-    <groupId>io.github.mkpaz</groupId>
+    <groupId>io.xpipe</groupId>
     <artifactId>atlantafx-base</artifactId>
-    <version>2.0.0</version>
+    <version>2.1.0</version>
 </dependency>
 ```
 
@@ -27,7 +27,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'io.github.mkpaz:atlantafx-base:2.0.0'
+    implementation 'io.xpipe:atlantafx-base:2.1.0'
 }
 ```
 

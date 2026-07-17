@@ -1,6 +1,15 @@
 # Changelog
 
-## [Unreleased]
+## [2.1.0] - 2026-07-17
+
+- Split fork from original with separate groupId for maven dependency
+- Fix modal pane transitions not resetting properly
+- Add support for graphics for toggle switches
+- Add minimize functionality to popovers and modal boxes
+- Remove ikonli style override
+- Fix toggle switch not reporting accessibility roles
+- Simplify modal pane skin structure
+- Remove various pseudo class style rules that caused a full dirty scene
 
 ## [2.0.1] - 2023-06-18
 
