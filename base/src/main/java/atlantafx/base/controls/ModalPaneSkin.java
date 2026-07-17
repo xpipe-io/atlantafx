@@ -43,7 +43,7 @@ public class ModalPaneSkin extends SkinBase<ModalPane> {
         super(control);
 
         contentWrapper = new StackPane();
-        contentWrapper.getStyleClass().add("scrollable-content");
+        contentWrapper.getStyleClass().add("modal-pane-content");
         contentWrapper.setAlignment(Pos.CENTER);
 
         getChildren().add(contentWrapper);

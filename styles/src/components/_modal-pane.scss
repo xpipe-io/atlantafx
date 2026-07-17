@@ -17,7 +17,7 @@ $minimize-button-icon-size: 0.03em 0.35em !default;
 .modal-pane {
   -color-modal-pane-overlay: $color-modal-bg;
 
-  >.scroll-pane>.viewport>*>.scrollable-content {
+  >.modal-pane-content {
     -fx-background-color: -color-modal-pane-overlay;
   }
 }
