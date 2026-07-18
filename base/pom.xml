@@ -9,6 +9,7 @@
         <version>2.1.0</version>
     </parent>
     <artifactId>atlantafx-base</artifactId>
+    <name>AtlantaFX base</name>
 
     <dependencies>
         <dependency>
