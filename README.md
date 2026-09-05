@@ -14,7 +14,7 @@
 </p>
 
 <p align="center">
-Modern JavaFX CSS theme collection with additional controls.
+Modern JavaFX CSS theme collection with additional controls. This is a fork of AtlantaFX with various fixes thate are specific to XPipe.
 </p>
 <p align="center"><b>
 See the <a href="https://mkpaz.github.io/atlantafx/">docs</a> for more info.
