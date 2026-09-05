@@ -15,7 +15,7 @@ Maven:
 <dependency>
     <groupId>io.xpipe</groupId>
     <artifactId>atlantafx-base</artifactId>
-    <version>2.1.0</version>
+    <version>2.1.1</version>
 </dependency>
 ```
 
@@ -27,7 +27,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'io.xpipe:atlantafx-base:2.1.0'
+    implementation 'io.xpipe:atlantafx-base:2.1.1'
 }
 ```
 
