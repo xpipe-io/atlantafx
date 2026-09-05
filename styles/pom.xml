@@ -9,6 +9,7 @@
         <version>2.1.1</version>
     </parent>
     <artifactId>atlantafx-styles</artifactId>
+    <name>AtlantaFX styles</name>
 
     <properties>
         <scss.inputDir>${project.basedir}/src</scss.inputDir>
