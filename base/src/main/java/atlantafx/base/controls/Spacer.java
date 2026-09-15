@@ -2,6 +2,7 @@
 
 package atlantafx.base.controls;
 
+import javafx.beans.value.ObservableDoubleValue;
 import javafx.geometry.Orientation;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -77,6 +78,23 @@ public class Spacer extends Region {
                 setMinHeight(size);
                 setPrefHeight(size);
                 setMaxHeight(size);
+            }
+        }
+    }
+
+    public Spacer(ObservableDoubleValue size, Orientation orientation) {
+        super();
+
+        switch (orientation) {
+            case HORIZONTAL -> {
+                minWidthProperty().bind(size);
+                prefWidthProperty().bind(size);
+                maxWidthProperty().bind(size);
+            }
+            case VERTICAL -> {
+                minHeightProperty().bind(size);
+                prefHeightProperty().bind(size);
+                maxHeightProperty().bind(size);
             }
         }
     }
