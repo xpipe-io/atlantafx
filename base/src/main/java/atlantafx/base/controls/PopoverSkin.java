@@ -64,6 +64,7 @@ import javafx.scene.shape.PathElement;
 import javafx.scene.shape.QuadCurveTo;
 import javafx.scene.shape.VLineTo;
 import javafx.stage.Window;
+import javafx.stage.WindowEvent;
 
 /**
  * The default skin for the {@link Popover} control.
@@ -134,8 +135,12 @@ public class PopoverSkin implements Skin<Popover> {
         titlePane.getStyleClass().add("title");
 
         content = new BorderPane();
-        content.setCenter(popover.getContentNode());
+        content.setCenter(popover.isShowing() ? popover.getContentNode() : null);
         content.getStyleClass().add("content");
+
+        // A hidden popup keeps its scene, so remove the content to let scene-bound listeners in it detach
+        popover.addEventHandler(WindowEvent.WINDOW_SHOWING, e -> content.setCenter(popover.getContentNode()));
+        popover.addEventHandler(WindowEvent.WINDOW_HIDDEN, e -> content.setCenter(null));
 
         if (popover.isDetached() || popover.isHeaderAlwaysVisible()) {
             content.setTop(titlePane);
@@ -158,7 +163,11 @@ public class PopoverSkin implements Skin<Popover> {
         getPopupWindow().xProperty().addListener(updatePathListener);
         getPopupWindow().yProperty().addListener(updatePathListener);
         popover.arrowLocationProperty().addListener(updatePathListener);
-        popover.contentNodeProperty().addListener((obs, oldContent, newContent) -> content.setCenter(newContent));
+        popover.contentNodeProperty().addListener((obs, oldContent, newContent) -> {
+            if (popover.isShowing()) {
+                content.setCenter(newContent);
+            }
+        });
         popover.detachedProperty().addListener((value, oldDetached, newDetached) -> {
             if (newDetached) {
                 popover.getStyleClass().add(DETACHED_STYLE_CLASS);

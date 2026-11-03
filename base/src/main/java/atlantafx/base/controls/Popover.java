@@ -32,10 +32,8 @@ package atlantafx.base.controls;
 import static javafx.scene.input.MouseEvent.MOUSE_CLICKED;
 
 import java.util.Objects;
-import java.util.Timer;
-import java.util.TimerTask;
 import javafx.animation.FadeTransition;
-import javafx.application.Platform;
+import javafx.animation.PauseTransition;
 import javafx.beans.InvalidationListener;
 import javafx.beans.WeakInvalidationListener;
 import javafx.beans.property.BooleanProperty;
@@ -126,6 +124,21 @@ public class Popover extends PopupControl {
 
         // a detached popover should of course not automatically hide itself
         detached.addListener(it -> setAutoHide(!isDetached()));
+
+        // the user clicked somewhere into the transparent background,
+        // if this is the case then hide the window (when attached)
+        getScene().addEventHandler(MOUSE_CLICKED, mouseEvent -> {
+            if (mouseEvent.getTarget().equals(getScene().getRoot()) && !isDetached()) {
+                hide();
+            }
+        });
+
+        // the owner window filter is only needed while showing
+        addEventHandler(WindowEvent.WINDOW_HIDDEN, evt -> {
+            if (ownerWindow != null) {
+                ownerWindow.removeEventFilter(WindowEvent.WINDOW_HIDING, closePopoverOnOwnerWindowClose);
+            }
+        });
 
         setAutoHide(true);
     }
@@ -263,13 +276,14 @@ public class Popover extends PopupControl {
     @Override
     public final void show(Window owner) {
         super.show(owner);
+        removeOwnerWindowHidingFilter();
         ownerWindow = owner;
 
         if (isAnimated()) {
             showFadeInAnimation(getFadeInDuration());
         }
 
-        ownerWindow.addEventFilter(WindowEvent.WINDOW_HIDING, closePopoverOnOwnerWindowClose);
+        registerOwnerWindowHidingFilter();
     }
 
     /**
@@ -278,13 +292,14 @@ public class Popover extends PopupControl {
     @Override
     public final void show(Window ownerWindow, double anchorX, double anchorY) {
         super.show(ownerWindow, anchorX, anchorY);
+        removeOwnerWindowHidingFilter();
         this.ownerWindow = ownerWindow;
 
         if (isAnimated()) {
             showFadeInAnimation(getFadeInDuration());
         }
 
-        ownerWindow.addEventFilter(WindowEvent.WINDOW_HIDING, closePopoverOnOwnerWindowClose);
+        registerOwnerWindowHidingFilter();
     }
 
     /**
@@ -334,6 +349,7 @@ public class Popover extends PopupControl {
             ownerWindow.yProperty().removeListener(weakYListener);
             ownerWindow.widthProperty().removeListener(weakHideListener);
             ownerWindow.heightProperty().removeListener(weakHideListener);
+            removeOwnerWindowHidingFilter();
         }
 
         ownerWindow = owner.getScene().getWindow();
@@ -343,14 +359,6 @@ public class Popover extends PopupControl {
         ownerWindow.heightProperty().addListener(weakHideListener);
 
         setOnShown(evt -> {
-            // the user clicked somewhere into the transparent background,
-            // if this is the case then hide the window (when attached)
-            getScene().addEventHandler(MOUSE_CLICKED, mouseEvent -> {
-                if (mouseEvent.getTarget().equals(getScene().getRoot()) && !isDetached()) {
-                    hide();
-                }
-            });
-
             // move the window so that the arrow will end up pointing at the target coordinates
             adjustWindowLocation();
 
@@ -364,12 +372,9 @@ public class Popover extends PopupControl {
             // Still it's not a 100% guarantee,but better than nothing.
             int delay =
                 Math.min((int) Objects.requireNonNullElse(fadeInDuration, DEFAULT_FADE_DURATION).toMillis() / 2, 250);
-            new Timer().schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    Platform.runLater(() -> getSkin().getNode().setVisible(true));
-                }
-            }, delay);
+            var reveal = new PauseTransition(Duration.millis(delay));
+            reveal.setOnFinished(e -> getSkin().getNode().setVisible(true));
+            reveal.play();
         });
 
         super.show(owner, x, y);
@@ -378,7 +383,7 @@ public class Popover extends PopupControl {
             showFadeInAnimation(Objects.requireNonNullElse(fadeInDuration, DEFAULT_FADE_DURATION));
         }
 
-        ownerWindow.addEventFilter(WindowEvent.WINDOW_HIDING, closePopoverOnOwnerWindowClose);
+        registerOwnerWindowHidingFilter();
     }
 
     private void showFadeInAnimation(Duration fadeInDuration) {
@@ -390,6 +395,18 @@ public class Popover extends PopupControl {
         fadeIn.setFromValue(0);
         fadeIn.setToValue(1);
         fadeIn.play();
+    }
+
+    private void removeOwnerWindowHidingFilter() {
+        if (ownerWindow != null) {
+            ownerWindow.removeEventFilter(WindowEvent.WINDOW_HIDING, closePopoverOnOwnerWindowClose);
+        }
+    }
+
+    // Removing first prevents the filter from piling up on the owner window with every show
+    private void registerOwnerWindowHidingFilter() {
+        removeOwnerWindowHidingFilter();
+        ownerWindow.addEventFilter(WindowEvent.WINDOW_HIDING, closePopoverOnOwnerWindowClose);
     }
 
     private void ownerWindowHiding() {
