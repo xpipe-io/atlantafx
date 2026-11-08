@@ -33,14 +33,6 @@ $color-border-selected: -color-accent-emphasis !default;
     }
   }
 
-  &.left-pill,
-  &.center-pill,
-  &.right-pill {
-    @if button.$use-shadow {
-      -fx-effect: dropshadow(gaussian, -color-button-shadow, 3px, -2, 0, 1);
-    }
-  }
-
   &:selected.left-pill:focused {
     -fx-background-insets: 0, cfg.$border-width;
   }

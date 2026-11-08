@@ -98,10 +98,6 @@ $color-danger-outlined-bg-hover:  $color-danger-bg-hover  !default;
 // opacity level for hover effect
 $opacity-hover: 0.9 !default;
 
-// shadow
-$use-shadow:   false !default;
-$color-shadow: -color-shadow-default !default;
-
 // basic style is shared with Button, ToggleButton and MenuButton
 @mixin base() {
 
@@ -122,18 +118,12 @@ $color-shadow: -color-shadow-default !default;
   -color-button-fg-pressed:     $color-fg-pressed;
   -color-button-border-pressed: $color-border-pressed;
 
-  -color-button-shadow:         $color-shadow;
-
   -fx-background-color:  -color-button-border, -color-button-bg;
   -fx-background-insets: 0, cfg.$border-width;
   -fx-background-radius: cfg.$border-radius, cfg.$inner-border-radius;
   -fx-graphic-text-gap:  cfg.$graphic-gap;
   -fx-text-fill: -color-button-fg;
   -fx-alignment: CENTER;
-
-  @if $use-shadow {
-    -fx-effect: dropshadow(gaussian, -color-button-shadow, 3px, -2, 0, 1);
-  }
 
   #{cfg.$font-icon-selector} {
     -fx-icon-color: -color-button-fg;

@@ -118,7 +118,7 @@ $opaqueSeparator: rgba(198.0, 198.0, 200.0, 1.0); // #c6c6c8ff
   $canvas-subtle:        $tertiarySystemGroupedBackground,
 
   $border-default:       scale.$base-2,
-  $border-muted:         lighten(scale.$base-2, 0.03),
+  $border-muted:         lighten(scale.$base-2, 3%),
   $border-subtle:        utils.flattenColor(scale.$light, color.change(scale.$dark, $alpha: 0.15)),
   $shadow-default:       scale.$base-2,
 
@@ -159,8 +159,7 @@ $opaqueSeparator: rgba(198.0, 198.0, 200.0, 1.0); // #c6c6c8ff
 
 @forward "components/button" as button-* with (
   $color-bg:       $systemBackground,
-  $color-success-bg-focused: -color-success-6,
-  $use-shadow:     true
+  $color-success-bg-focused: -color-success-6
 );
 
 @forward "components/checkbox" as checkbox-* with (

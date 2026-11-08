@@ -15,7 +15,7 @@ $canvas-inset:         scale.$base-0 !default;
 $canvas-subtle:        scale.$base-0 !default;
 
 $border-default:       scale.$base-2 !default;
-$border-muted:         lighten(scale.$base-2, 0.03) !default;
+$border-muted:         lighten(scale.$base-2, 3%) !default;
 $border-subtle:        utils.flattenColor(scale.$light, color.change(scale.$dark, $alpha: 0.15)) !default;
 $shadow-default:       scale.$base-2 !default;
 

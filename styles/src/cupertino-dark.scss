@@ -158,8 +158,7 @@ $opaqueSeparator: rgba(56.0, 56.0, 58.0, 1.0);     // #38383aff
 
 @forward "components/button" as button-* with (
   $color-bg:   $secondarySystemGroupedBackground,
-  $color-success-bg-focused: -color-success-7,
-  $use-shadow: true
+  $color-success-bg-focused: -color-success-7
 );
 
 @forward "components/checkbox" as checkbox-* with (
