@@ -3,7 +3,6 @@
 package atlantafx.base.layout;
 
 import atlantafx.base.controls.ModalPane;
-import atlantafx.base.controls.Tile;
 import atlantafx.base.util.PlatformUtils;
 import java.util.Objects;
 import javafx.beans.NamedArg;
@@ -11,12 +10,9 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.collections.ListChangeListener;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import org.jetbrains.annotations.Nullable;
@@ -37,7 +33,6 @@ public class ModalBox extends AnchorPane {
     protected final StackPane closeButtonIcon = new StackPane();
     protected final @Nullable String selector;
     protected @Nullable ModalPane modalPane;
-    protected boolean headerTitleCentered;
 
     /**
      * Creates a ModalBox layout.
@@ -129,7 +124,6 @@ public class ModalBox extends AnchorPane {
         getStyleClass().add("modal-box");
         getChildren().add(minimizeButton);
         getChildren().add(closeButton);
-        getChildren().addListener((ListChangeListener<Node>) c -> headerTitleCentered = false);
         setCloseButtonPosition();
         setMinimizeButtonPosition();
     }
@@ -149,30 +143,6 @@ public class ModalBox extends AnchorPane {
             setLeftAnchor(minimizeButton, 45d);
         } else {
             setRightAnchor(minimizeButton, 45d);
-        }
-    }
-
-    @Override
-    protected void layoutChildren() {
-        if (PlatformUtils.isMac() && !headerTitleCentered && getScene() != null) {
-            // ModalPane lays out new content manually before the CSS pass,
-            // so ensure skins are created, otherwise the tile title doesn't exist yet
-            applyCss();
-            centerHeaderTitle();
-            headerTitleCentered = true;
-        }
-        super.layoutChildren();
-    }
-
-    /**
-     * On macOS the minimize and close buttons are placed on the left side,
-     * so the dialog header title is centered to keep it from being covered
-     * by the buttons. The header is the first {@link Tile} in the content.
-     */
-    protected void centerHeaderTitle() {
-        if (lookup(".tile > .container > .header > .title") instanceof Label title) {
-            title.setMaxWidth(Double.MAX_VALUE);
-            title.setAlignment(Pos.CENTER);
         }
     }
 
