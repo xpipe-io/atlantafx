@@ -16,6 +16,9 @@ $padding-y:     10px !default;
   >.border {
     -fx-stroke: $color-border;
     -fx-stroke-width: cfg.$border-width;
+    // A centered stroke extends past the arrow tip by a fractional amount, resulting in fractional popup window bounds
+    // As the native window size is always rounded, the popup window would then constantly be resized back and forth
+    -fx-stroke-type: inside;
     -fx-fill: $color-bg;
   }
 

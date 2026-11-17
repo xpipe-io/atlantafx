@@ -139,7 +139,7 @@ public class PopoverSkin implements Skin<Popover> {
         content.getStyleClass().add("content");
 
         // A hidden popup keeps its scene, so remove the content to let scene-bound listeners in it detach
-        popover.addEventHandler(WindowEvent.WINDOW_SHOWING, e -> content.setCenter(popover.getContentNode()));
+        popover.addEventHandler(WindowEvent.WINDOW_SHOWING, e -> attachContent());
         popover.addEventHandler(WindowEvent.WINDOW_HIDDEN, e -> content.setCenter(null));
 
         if (popover.isDetached() || popover.isHeaderAlwaysVisible()) {
@@ -258,11 +258,16 @@ public class PopoverSkin implements Skin<Popover> {
         stackPane.setOnMouseDragged(mouseDragHandler);
         stackPane.setOnMouseReleased(mouseReleasedHandler);
 
-        stackPane.setVisible(false);
         stackPane.getChildren().add(path);
         stackPane.getChildren().add(content);
 
         content.setClip(clip);
+    }
+
+    void attachContent() {
+        if (content.getCenter() != getSkinnable().getContentNode()) {
+            content.setCenter(getSkinnable().getContentNode());
+        }
     }
 
     @Override

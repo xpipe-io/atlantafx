@@ -33,7 +33,6 @@ import static javafx.scene.input.MouseEvent.MOUSE_CLICKED;
 
 import java.util.Objects;
 import javafx.animation.FadeTransition;
-import javafx.animation.PauseTransition;
 import javafx.beans.InvalidationListener;
 import javafx.beans.WeakInvalidationListener;
 import javafx.beans.property.BooleanProperty;
@@ -112,9 +111,29 @@ public class Popover extends PopupControl {
         InvalidationListener repositionListener = observable -> {
             if (isShowing() && !isDetached()) {
                 show(getOwnerNode(), targetX, targetY);
-                adjustWindowLocation();
+                updateWindowLocation();
             }
         };
+
+        // The bounds of the popover are required to compute the window location
+        // Lay it out before the window is mapped, so we can already move it to its final location at that point
+        // Otherwise, the window would be visibly moved after being shown, resulting in a flicker
+        addEventHandler(WindowEvent.WINDOW_SHOWING, evt -> {
+            var root = getScene().getRoot();
+            if (root == null) {
+                return;
+            }
+
+            // Creates the skin if necessary
+            root.applyCss();
+            if (getSkin() instanceof PopoverSkin popoverSkin) {
+                // The skin handler might not have been called yet
+                popoverSkin.attachContent();
+            }
+            root.applyCss();
+            root.layout();
+            updateWindowLocation();
+        });
 
         arrowSize.addListener(repositionListener);
         cornerRadius.addListener(repositionListener);
@@ -192,6 +211,7 @@ public class Popover extends PopupControl {
 
     private final ChangeListener<Number> xListener = (value, oldX, newX) -> {
         if (!isDetached()) {
+            targetX += newX.doubleValue() - oldX.doubleValue();
             setAnchorX(getAnchorX() + (newX.doubleValue() - oldX.doubleValue()));
         }
     };
@@ -200,6 +220,7 @@ public class Popover extends PopupControl {
 
     private final ChangeListener<Number> yListener = (value, oldY, newY) -> {
         if (!isDetached()) {
+            targetY += newY.doubleValue() - oldY.doubleValue();
             setAnchorY(getAnchorY() + (newY.doubleValue() - oldY.doubleValue()));
         }
     };
@@ -359,22 +380,9 @@ public class Popover extends PopupControl {
         ownerWindow.heightProperty().addListener(weakHideListener);
 
         setOnShown(evt -> {
-            // move the window so that the arrow will end up pointing at the target coordinates
-            adjustWindowLocation();
-
-            // Popover flickering fix:
-            // The reason of flickering is that for calculating popup bounds show() method have to
-            // be called PRIOR TO adjusting window position. So, in a very short period we see the
-            // window in its initial position. Ideally, we have to call adjustWindowLocation() right
-            // after window is added to the scene, but before it's rendered, which is not possible
-            // due to JavaFX async nature. The only way seems to start popover as invisible (not opaque)
-            // and then restore its visibility after a fixed delay to hide window repositioning.
-            // Still it's not a 100% guarantee,but better than nothing.
-            int delay =
-                Math.min((int) Objects.requireNonNullElse(fadeInDuration, DEFAULT_FADE_DURATION).toMillis() / 2, 250);
-            var reveal = new PauseTransition(Duration.millis(delay));
-            reveal.setOnFinished(e -> getSkin().getNode().setVisible(true));
-            reveal.play();
+            // The window should already be at the correct location as it is positioned while being laid out
+            // This only moves the window in case the bounds changed afterward
+            updateWindowLocation();
         });
 
         super.show(owner, x, y);
@@ -451,29 +459,44 @@ public class Popover extends PopupControl {
             } else {
                 super.hide();
             }
-            getSkin().getNode().setVisible(false);
         }
     }
 
-    private void adjustWindowLocation() {
+    // Moves the window so that the arrow points at the target coordinates
+    // This is computed from the target and not the current anchor, so it can be called repeatedly
+    private void updateWindowLocation() {
+        if (getSkin() == null || isDetached()) {
+            return;
+        }
+
         Bounds bounds = getSkin().getNode().getBoundsInParent();
+        double x;
+        double y;
         switch (getArrowLocation()) {
-            case TOP_CENTER, TOP_LEFT, TOP_RIGHT -> {
-                setAnchorX(getAnchorX() + bounds.getMinX() - computeXOffset());
-                setAnchorY(getAnchorY() + bounds.getMinY() + getArrowSize());
-            }
             case LEFT_TOP, LEFT_CENTER, LEFT_BOTTOM -> {
-                setAnchorX(getAnchorX() + bounds.getMinX() + getArrowSize());
-                setAnchorY(getAnchorY() + bounds.getMinY() - computeYOffset());
+                x = targetX + bounds.getMinX() + getArrowSize();
+                y = targetY + bounds.getMinY() - computeYOffset();
             }
             case BOTTOM_CENTER, BOTTOM_LEFT, BOTTOM_RIGHT -> {
-                setAnchorX(getAnchorX() + bounds.getMinX() - computeXOffset());
-                setAnchorY(getAnchorY() - bounds.getMinY() - bounds.getMaxY() - 1);
+                x = targetX + bounds.getMinX() - computeXOffset();
+                y = targetY - bounds.getMinY() - bounds.getMaxY() - 1;
             }
             case RIGHT_TOP, RIGHT_BOTTOM, RIGHT_CENTER -> {
-                setAnchorX(getAnchorX() - bounds.getMinX() - bounds.getMaxX() - 1);
-                setAnchorY(getAnchorY() + bounds.getMinY() - computeYOffset());
+                x = targetX - bounds.getMinX() - bounds.getMaxX() - 1;
+                y = targetY + bounds.getMinY() - computeYOffset();
             }
+            default -> {
+                x = targetX + bounds.getMinX() - computeXOffset();
+                y = targetY + bounds.getMinY() + getArrowSize();
+            }
+        }
+
+        // Only update if necessary, as any update moves the window and causes the popover path to be updated
+        if (getAnchorX() != x) {
+            setAnchorX(x);
+        }
+        if (getAnchorY() != y) {
+            setAnchorY(y);
         }
     }
 
